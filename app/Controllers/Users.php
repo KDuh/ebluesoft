@@ -60,6 +60,14 @@ class Users extends BaseController
 		return view('admin/users/table', $data);
 	}
 
+	public function add(){
+		$data['form'] = $form = $this->crud->form();
+		$data['title'] = $this->crud->getAddTitle();
+
+		return view('admin/users/form', $data);
+
+	}
+
 	protected function field_options(){
 		$fields = [];
 
@@ -68,6 +76,8 @@ class Users extends BaseController
 		$fields['u_lastname'] = ['label' => 'Sobrenome'];
 		$fields['u_email'] = ['label' => 'Email'];
 		$fields['u_status'] = ['label' => 'Status'];
+		$fields['u_password'] = ['label' => 'Senha', 'only_add' => true];
+		$fields['u_created_at'] = ['label' => 'Criado em'];
 
 		return $fields;
 	}
