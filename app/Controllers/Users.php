@@ -7,22 +7,6 @@ class Users extends BaseController
 {
 	protected $crud;
 
-		//$base = null, //prefix uri or parrent controller.
-		//$action = 'add',  //determine create or update // default is create (add)
-		//$table, //string
-		//$table_title, //string
-		//$form_title_add, //string
-		//$form_title_update, //string
-		//$form_submit, //string
-		//$form_submit_update, //string
-		//$fields = [], //array of field options: (type, required, label),
-		//$id,  //primary key value
-		//$id_field,  //primary key field
-		//$current_values, //will get current form values before updating
-		//$db, //db connection instance
-		//$model, //db connection instance
-		//$request;
-
 	function __construct(){
 		$params = [
 			'table' => 'users',
@@ -51,7 +35,7 @@ class Users extends BaseController
 		
 		$per_page = 10;
 		$columns = ['u_id', 'u_firstname', 'u_lastname', 'u_email', 'u_status'];
-		$where = ['u_status =' => 'Active'];
+		$where = null; //['u_status =' => 'Active'];
 		$order = [
 			['u_id', 'ASC']
 		];
