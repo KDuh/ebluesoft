@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ci 4 Crud</title>
+    <title>e-Blue Software</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
@@ -138,7 +138,7 @@
             <!-- Brand Logo -->
             <a href="/" class="brand-link">
                 <img src="/admin/assets/img/crud_logo.png" alt="CI4 CRUD Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">CI4 Crud</span>
+                <span class="brand-text font-weight-light">e-Blue Soft</span>
             </a>
 
             <!-- Sidebar -->

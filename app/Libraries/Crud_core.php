@@ -522,7 +522,7 @@ class Crud_core
     <script type="text/javascript">
             $(function () {
                 $("#' . $field_type . '").datetimepicker({
-                    format: "DD/MM/YYYY HH:mm:ss"
+                    format: "YYYY-MM-DD HH:mm"
                 });
             });
         </script>';
@@ -549,7 +549,7 @@ class Crud_core
     <script type="text/javascript">
             $(function () {
                 $("#' . $field_type . '").datetimepicker({
-                    format: "DD/MM/YYYY"
+                    format: "YYYY-MM-DD"
                 });
             });
         </script>';

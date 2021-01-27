@@ -64,20 +64,38 @@ class Users extends BaseController
 		$data['form'] = $form = $this->crud->form();
 		$data['title'] = $this->crud->getAddTitle();
 
+		if(is_array($form) && isset($form['redirect']))
+			return redirect()->to($form['redirect']);
+
 		return view('admin/users/form', $data);
 
+	}
+
+	public function edit($id){
+		
+		if(!$this->crud->current_values($id))
+			return redirect()->to($this->crud->getBase() . '/' . $this->crud->getTable());
+
+		$data['item_id'] = $id;
+		$data['form'] = $form = $this->crud->form();
+		$data['title'] = $this->crud->getEditTitle();
+
+		if(is_array($form) && isset($form['redirect']))
+			return redirect()->to($form['redirect']);
+
+		return view('admin/users/form', $data);
 	}
 
 	protected function field_options(){
 		$fields = [];
 
 		$fields['u_id'] = ['label' => 'ID'];
-		$fields['u_firstname'] = ['label' => 'Nome'];
-		$fields['u_lastname'] = ['label' => 'Sobrenome'];
-		$fields['u_email'] = ['label' => 'Email'];
-		$fields['u_status'] = ['label' => 'Status'];
-		$fields['u_password'] = ['label' => 'Senha', 'only_add' => true];
-		$fields['u_created_at'] = ['label' => 'Criado em'];
+		$fields['u_firstname'] = ['label' => 'Nome','required' => true, 'helper' => 'Insira seu Nome', 'class' => 'col-12 col-sm-6'];
+		$fields['u_lastname'] = ['label' => 'Sobrenome', 'required' => true, 'helper' => 'Insira seu Sobrenome','class' => 'col-12 col-sm-6'];
+		$fields['u_email'] = ['label' => 'Email', 'required' => true, 'unique' => [true, 'u_email']];
+		$fields['u_status'] = ['label' => 'Status','required' => true,];
+		$fields['u_password'] = ['label' => 'Senha', 'required' => true, 'only_add' => true, 'type' => 'password', 'class' => 'col-12 col-sm-6','confirm' => true, 'password_hash' => true];
+		$fields['u_created_at'] = ['label' => 'Criado em', 'required' => true,'only_edit' => true];
 
 		return $fields;
 	}
