@@ -103,6 +103,10 @@ class Crud_core
             //This $_POST['form'] is just to check if the $_POST values are from
             // form submition and not search or something else
             unset($post['form']);
+
+            if (isset($post['files'])) {
+                unset($post['files']);
+            }
             //Create rules
             $novalidation = true;
             $this->validator = service('validation');
@@ -573,6 +577,7 @@ class Crud_core
         $input .= '
     <script>$(document).ready(function() {
       $("#' . $rid . '").summernote({
+          height: 150,
         toolbar: [
           [\'style\', [\'style\',\'bold\', \'italic\', \'underline\', \'clear\']],
           [\'font\', [\'strikethrough\']],
