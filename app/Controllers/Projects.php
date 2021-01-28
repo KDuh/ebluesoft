@@ -78,6 +78,18 @@ class Projects extends BaseController
 	{
 		$fields = [];
 		$fields['p_id'] = ['label' => 'ID'];
+		$fields['p_uid'] = [
+			'label' => 'User',
+			'required' => true,
+			'type' => 'dropdown',
+			'relation' => [
+				'table' => 'users', 
+				'primary_key' => 'u_id',
+				'display' => ['u_firstname'],
+				'order_by' => 'u_firstname',
+				'order' => 'ASC'
+			]
+		];
 		$fields['p_description'] = ['label' => 'Description', 'type' => 'editor'];
 		$fields['p_start_date'] = ['label' => 'Starts at', 'required' => true, 'class' => 'col-12 col-sm-6'];
 		$fields['p_end_date'] = ['label' => 'Ends at', 'required' => true, 'class' => 'col-12 col-sm-6'];
