@@ -256,6 +256,7 @@ class Crud_core
                         }
                         //Preparing submited values
                         $newRelations = $otherTableValues[$otherTable]['values'];
+                        $newRelations = (is_array($newRelations) ? $newRelations : []);
                       
                         //Exclude same data
                         $toDelete = array_diff($exisingRelations, $newRelations);

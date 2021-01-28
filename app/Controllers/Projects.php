@@ -38,7 +38,7 @@ class Projects extends BaseController
 		$data['title'] = $this->crud->getTableTitle();
 
 		$per_page = 20;
-		$columns = ['p_id', 'p_uid', 'p_title', 'p_price', 'p_start_date', 'p_end_date', 'p_status',];
+		$columns = ['p_id', 'p_uid', 'p_title', 'p_price', 'tags', 'p_start_date', 'p_end_date', 'p_status',];
 		$where = null;//['u_status =' => 'Active'];
 		$order = [
 			['p_id', 'ASC']
@@ -87,6 +87,22 @@ class Projects extends BaseController
 				'primary_key' => 'u_id',
 				'display' => ['u_firstname', 'u_lastname'],
 				'order_by' => 'u_firstname',
+				'order' => 'ASC'
+			]
+		];
+		$fields['tags'] = [
+			'label' => 'Tags',
+			'required' => false,
+			'type' => 'checkboxes',
+			'relation' => [
+				'save_table' => 'project_tags',
+				'parent_field' => 'pt_project_id',
+				'child_field' => 'pt_tag_id',
+				'inner_class' => 'col-6 col-sm-3',
+				'table' => 'tags', 
+				'primary_key' => 't_id',
+				'display' => ['t_name'],
+				'order_by' => 't_name',
 				'order' => 'ASC'
 			]
 		];
