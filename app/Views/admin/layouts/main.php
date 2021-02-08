@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="/admin/assets/css/adminlte.min.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="/admin/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Custom BS4 File Input -->
+    <script src="/admin/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
     <!-- Daterange picker -->
     <link rel="stylesheet" href="/admin/assets/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->

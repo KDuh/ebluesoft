@@ -106,6 +106,18 @@ class Projects extends BaseController
 				'order' => 'ASC'
 			]
 		];
+		$fields['p_image'] = [
+			'label' => 'Featured Image',
+			'type' => 'file',
+			'path' => './uploads/images',
+			'is_image' => true,
+			'max_size' => '1024',
+			'ext_in' => 'png,jpg,gif',
+			'wrapper_start' => '<div class="row"><div class="col-12 col-sm-3 mt-3 mb-3">',
+			'wrapper_end' => '</div></div>',
+			'show_file_names' => true,
+			'placeholder' => '/admin/assets/img/pdf-icon.png'
+		];
 		$fields['p_description'] = ['label' => 'Description', 'type' => 'editor'];
 		$fields['p_start_date'] = ['label' => 'Starts at', 'required' => true, 'class' => 'col-12 col-sm-6'];
 		$fields['p_end_date'] = ['label' => 'Ends at', 'required' => true, 'class' => 'col-12 col-sm-6'];

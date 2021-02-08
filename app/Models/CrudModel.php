@@ -27,6 +27,14 @@ class CrudModel
         return $this->db->insertID();
     }
 
+    public function getAnyItems($table, $where = false){
+        $builder = $this->db->table($table);
+        if($where)
+            $builder->where($where);
+        
+        return $builder->get()->getResult();
+    }
+
     public function updateItem($table, $where, $data)
     {
         $this->db->table($table)->where($where)->update($data);
@@ -40,10 +48,10 @@ class CrudModel
     }
 
     //Get one item
-    public function getItem($table, $field, $id)
+    public function getItem($table, $where)
     {
         return $this->db->table($table)
-            ->where([$field => $id])
+            ->where($where)
             ->get()
             ->getRow();
     }
@@ -54,7 +62,7 @@ class CrudModel
         $count_query = "SELECT COUNT(*) as total FROM " . $table;
         //get primary_key field name
         $pk = $this->get_primary_key_field_name($table);
-        
+
         if ($where) {
             $count_query .= " WHERE (";
             $i = 0;
@@ -155,7 +163,7 @@ class CrudModel
         }
 
         if ($request->getPost('table_search')) {
-           
+
             $allEmpty = true;
             $tempQuery = '';
             $i = 0;
@@ -174,46 +182,45 @@ class CrudModel
                 $allEmpty = false;
                 $col_search = [];
                 $col_search[] = $column->Field;
-                if (isset($fields[$column->Field]['relation']) && isset($fields[$column->Field]['relation']['save_table'])){
+                if (isset($fields[$column->Field]['relation']) && isset($fields[$column->Field]['relation']['save_table'])) {
                     //Search relational table to get the ids of related ids
                     $relField = $fields[$column->Field]['relation'];
-                    
+
                     $parent_table = $relField['table'];
                     $relation_table = $relField['save_table'];
-                    $joinString = $relation_table.'.'.$relField['child_field'].'='.$parent_table.'.'.$relField['primary_key'];
+                    $joinString = $relation_table . '.' . $relField['child_field'] . '=' . $parent_table . '.' . $relField['primary_key'];
                     $likeColumns = $relField['display'];
                     $likeTerm = $request->getPost($column->Field);
                     //$relselect is optional. when used it will add DISTINCT to prevent dublicates
                     $relSelect = $relation_table . '.' . $relField['parent_field'];
                     $relatedItems = $this->searchRelatedItems($parent_table, $relation_table, $joinString, $likeColumns, $likeTerm, $relSelect);
                     $relatedItemsIdArr = [];
-                    if(!$relatedItems)
-                    $relatedItemsIdArr = '-1';
-                    else{
+                    if (!$relatedItems)
+                        $relatedItemsIdArr = '-1';
+                    else {
                         //Create an array of ids for whereIn statement
                         foreach ($relatedItems as $relatedItem) {
                             $relatedItemsIdArr[] = $relatedItem->{$relField['parent_field']};
                         }
-                     }   
+                    }
 
-                     if ($i > 0)
-                     $tempQuery .= " AND ";
+                    if ($i > 0)
+                        $tempQuery .= " AND ";
 
-                     if(is_array($relatedItemsIdArr))
-                     $relTempQuery = ''.$table.'.'.$pk.' IN ('.implode(',', $relatedItemsIdArr).')';
-                     else
-                     $relTempQuery = $table . '.' . $pk . ' = ' . $relatedItemsIdArr;
+                    if (is_array($relatedItemsIdArr))
+                        $relTempQuery = '' . $table . '.' . $pk . ' IN (' . implode(',', $relatedItemsIdArr) . ')';
+                    else
+                        $relTempQuery = $table . '.' . $pk . ' = ' . $relatedItemsIdArr;
 
                     //  echo $tempQuery.'<br>';
-                     $tempQuery .= $relTempQuery;
+                    $tempQuery .= $relTempQuery;
                     //  echo $tempQuery;
-                   
-                     $i++;
+
+                    $i++;
                     //$allEmpty = false;
-                     continue;
-                
-                }else if (isset($fields[$column->Field]['relation'])) {
-                    
+                    continue;
+                } else if (isset($fields[$column->Field]['relation'])) {
+
                     $col_search = $fields[$column->Field]['relation']['display'];
                     //check if display is an array of columns
                     if (!is_array($col_search))
@@ -227,7 +234,7 @@ class CrudModel
                 }
                 if ($i > 0)
                     $tempQuery .= " AND ";
-                
+
 
                 //For loop is required when search must be performed in multiple relational columns from another table
                 $searchLikeTempQuery = '';
@@ -235,12 +242,12 @@ class CrudModel
                 foreach ($col_search as $colToSearch) {
                     $searchLikeTempQueryArr[] = $this->generateLikeClause($table_search, $colToSearch, $request->getPost($column->Field));
                 }
-                
-                if(count($col_search) > 1){
+
+                if (count($col_search) > 1) {
                     $searchLikeTempQuery = implode(' OR ', $searchLikeTempQueryArr);
                     $searchLikeTempQuery = "($searchLikeTempQuery)";
-                }else
-                     $searchLikeTempQuery = $searchLikeTempQueryArr[0];
+                } else
+                    $searchLikeTempQuery = $searchLikeTempQueryArr[0];
 
 
                 $tempQuery .= $searchLikeTempQuery;
@@ -265,7 +272,7 @@ class CrudModel
                 $i++;
             }
         } else {
-            
+
             $result_query .= " ORDER BY " . $pk . " DESC";
             //$this->db->order_by($pk, 'DESC');
         }
@@ -273,7 +280,7 @@ class CrudModel
         $result_query = rtrim($result_query, ',');
         $result_query .= " LIMIT $offset, $per_page ";
         //$this->db->limit($per_page, $offset);
-      
+
         $page_items = $this->db->query($result_query)->getResult();
 
 
@@ -284,63 +291,65 @@ class CrudModel
     public function getRelationItems($table, $where = null, $orderField = null, $orderDirection = null)
     {
         $builder = $this->db->table($table);
-        
-        if($where)
-        $builder->where($where);
 
-        if($orderField)
-        $builder->orderBy($orderField, $orderDirection);
-        
+        if ($where)
+            $builder->where($where);
+
+        if ($orderField)
+            $builder->orderBy($orderField, $orderDirection);
+
         $items = $builder->get()
             ->getResult();
-         
+
         return $items;
     }
 
-    public function deleteItems($table, $where = null, $whereInField = null, $whereInValue = null){
+    public function deleteItems($table, $where = null, $whereInField = null, $whereInValue = null)
+    {
         $builder = $this->db->table($table);
 
         if ($where)
             $builder->where($where);
-        
+
         if ($whereInField && $whereInValue)
             $builder->whereIn($whereInField, $whereInValue);
 
         return $builder->delete();
-
     }
 
-    public function batchInsert($table, $data){
+    public function batchInsert($table, $data)
+    {
         $builder = $this->db->table($table);
         return $builder->insertBatch($data);
     }
 
-    public function getRelationItemsJoin($table, $where, $joinTable, $joinString){
+    public function getRelationItemsJoin($table, $where, $joinTable, $joinString)
+    {
         $builder = $this->db->table($table);
         $builder->where($where);
         $builder->join($joinTable, $joinString);
         return $builder->get()->getResult();
-
     }
 
-    public function searchRelatedItems($parent_table, $relation_table, $joinString, $likeColumns, $likeTerm, $select = '*'){
+    public function searchRelatedItems($parent_table, $relation_table, $joinString, $likeColumns, $likeTerm, $select = '*')
+    {
         $builder = $this->db->table($relation_table);
         $builder->select($select);
         $builder->join($parent_table, $joinString);
         for ($i = 0; $i < count($likeColumns); $i++) {
-            if($i < 1){
-                $builder->like($parent_table.'.'.$likeColumns[$i], $likeTerm);
-            }else{
-                $builder->orLike($parent_table.'.'.$likeColumns[$i], $likeTerm );
+            if ($i < 1) {
+                $builder->like($parent_table . '.' . $likeColumns[$i], $likeTerm);
+            } else {
+                $builder->orLike($parent_table . '.' . $likeColumns[$i], $likeTerm);
             }
         }
 
         return $builder->distinct()->get()->getResult();
-        
     }
 
 
-    public function generateLikeClause($table_search, $colToSearch, $searchTerm){
+    public function generateLikeClause($table_search, $colToSearch, $searchTerm)
+    {
         return $table_search . "." . $colToSearch
             . " LIKE '%"
             . trim($this->db->escapeLikeString($searchTerm))
